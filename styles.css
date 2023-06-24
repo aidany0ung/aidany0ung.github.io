@@ -1,10 +1,22 @@
-* {
-    text-align: center;
-    color: darkslategray;
-    padding: 0;
-    margin: 0;
+nav {
+    text-align: left;
+    border: 1px;
+    color: red;
 }
 
-body {
-    background-image: url('./background.png');
+.left {
+    float: left;
+    border-color: gray;
+}
+
+.right {
+    float: right;
+}
+
+.header {
+    overflow: hidden;
+    background-color: lightsteelblue;
+    padding: 20px 10px;
   }
+  
+.clear { clear:both; }
