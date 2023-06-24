@@ -2,17 +2,9 @@
     text-align: center;
     color: darkslategray;
     padding: 0;
-    margin: 5px;
+    margin: 0;
 }
 
 body {
-    background-color: whitesmoke;
-}
-
-hr {
-    margin: 0 20px;
-}
-
-#person h1 {
-    padding-top: 10px;
-}
+    background-image: url('./background.png');
+  }
