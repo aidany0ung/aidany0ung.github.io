@@ -1,3 +1,11 @@
+@font-face {
+    font-family: 'elenaregular';
+    src: url('elena-w9az-webfont.woff2') format('woff2'),
+         url('elena-w9az-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -78,11 +86,29 @@ body {
   .header h1 {
     color: inherit;
     text-align: center;
-    padding: 10px;
+    padding: 20px;
     margin: 0;
+    font-family: "elenaregular";
   }
 
-  #header-img {
-      background-image: url('YoungAidan_headshot.jpg');
-      background-size: cover;
+  .header-img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    overflow: hidden;
   }
+
+  .header-img img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .header-name {
+    font-family: "elenaregular";
+    font-size: 50px;
+}
+
+* .header {
+  border-right: 1px solid black;
+}
