@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Scrolling Background with Parallax Text</title>
+  <title>Aidan Young Portfolio</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 
@@ -10,10 +11,14 @@
         <div class="header-name">Aidan Young</div>
         <!--<div class="header-img"><img src="profilegray.png" alt="Image"></div>-->
         <div class="header-email"></div>
+        <button class='expand-header' onclick="toggleDropdown()">EXPAND</button>
+        <div class='header-toexpand' id='contact'>
+          <div>HELLO</div>
+        </div>
     </header>
     
   <div class="background"></div>
-  
+
   <section class="section">
     <div class="content">
       <h2>Section 1</h2>
