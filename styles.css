@@ -1,22 +1,88 @@
-nav {
-    text-align: left;
-    border: 1px;
-    color: red;
-}
-
-.left {
-    float: left;
-    border-color: gray;
-}
-
-.right {
-    float: right;
-}
-
-.header {
-    overflow: hidden;
-    background-color: lightsteelblue;
-    padding: 20px 10px;
+body {
+    margin: 0;
+    padding: 0;
+    cursor: url('./squid.png'), auto;
   }
   
-.clear { clear:both; }
+  .background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: background-color 0.5s ease-in-out;
+  }
+  
+  .section {
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    text-align: center;
+    z-index: 2;
+  }
+  
+  .section:nth-child(odd) .content {
+    transform: translate(-50%, -50%) translateY(-20%);
+  }
+  
+  .section:nth-child(even) .content {
+    transform: translate(-50%, -50%) translateY(20%);
+  }
+  
+  .section h2 {
+    font-size: 3em;
+    margin: 0;
+  }
+  
+  .section p {
+    font-size: 1.5em;
+  }
+  
+  .section:nth-child(1) .content {
+    color: #000;
+  }
+  
+  .section:nth-child(2) .content {
+    color: #fff;
+  }
+  
+  .section:nth-child(3) .content {
+    color: #000;
+  }
+  
+  .section:nth-child(4) .content {
+    color: #fff;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border: 1px solid black;
+    z-index: 3;
+    padding: 5px;
+  }
+  
+  .header h1 {
+    color: inherit;
+    text-align: center;
+    padding: 10px;
+    margin: 0;
+  }
+
+  #header-img {
+      background-image: url('YoungAidan_headshot.jpg');
+      background-size: cover;
+  }
