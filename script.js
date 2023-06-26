@@ -2,12 +2,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const background = document.querySelector('.background');
   const sections = document.querySelectorAll('.section');
   const header = document.querySelector('.header');
+  const headercard = document.querySelector('.header-toexpand');
 
   const colors = [
-    '#FF6347',
-    '#6495ED',
-    '#FFD700',
-    '#90EE90'
+    '#D9EBFF',
+    '#FFE7E6',
+    '#FFE3B3',
+    '#BFFFDB'
   ];
 
   function updateBackgroundColor() {
@@ -21,7 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     background.style.backgroundColor = backgroundColor;
     header.style.transition = 'background-color 0.5s ease-in-out'; // Add transition property
-    header.style.backgroundColor = backgroundColor; // Apply color to header
+    header.style.backgroundColor = hexToHSL(backgroundColor,15);
+    headercard.style.transition = 'background-color 0.5s ease-in-out'; // Add transition property
+    headercard.style.backgroundColor = hexToHSL(backgroundColor,15); // Apply color to header
   }
 
   // Apply initial background color on page load
@@ -30,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Update background color on scroll
   window.addEventListener('scroll', updateBackgroundColor);
 
-  function hexToHSL(H) {
+  function hexToHSL(H,inc) {
     // Convert hex to RGB first
     let r = 0, g = 0, b = 0;
     if (H.length == 4) {
@@ -72,6 +75,27 @@ document.addEventListener('DOMContentLoaded', () => {
     s = +(s * 100).toFixed(1);
     l = +(l * 100).toFixed(1);
   
-    return "hsl(" + h + "," + s + "%," + l + "%)";
+    return "hsl(" + h + "," + s + "%," + (l-inc) + "%)";
   }
 });
+
+  function toggleDropdown() {
+    var dropdown = document.getElementById("contact");
+    var isHidden = dropdown.style.display === "none";
+
+    if (isHidden) {
+        dropdown.style.display = "block"; // Delay the maxHeight update to ensure the transition is applied
+    } else {
+      dropdown.style.display = "none";
+    }
+  }
+
+  function toggleTwo() {
+    var box = document.getElementById('contact');
+    if (!box.style.display || box.style.display == "none") {
+        box.style.display = "block";
+    }
+    else {
+        box.style.display = "none";
+    }
+}
