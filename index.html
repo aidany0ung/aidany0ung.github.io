@@ -1,22 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Aidan Young Portfolio</title>
+  <title>Aidan Young</title>
   <link rel="stylesheet" href="styles.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-
     <header class="header">
-        <div class="header-name">Aidan Young</div>
+        <div class="header-name">aidan</div>
         <!--<div class="header-img"><img src="profilegray.png" alt="Image"></div>-->
-        <div class="header-email"></div>
-        <button class='expand-header' onclick="toggleDropdown()">EXPAND</button>
+        <button class='expand-header header-name' id='expand-header' onclick="toggleTwo()"><img id='arrow' src='arrowasset.svg' width="30px"></button>
+        <div class="header-name">young</div>
         <div class='header-toexpand' id='contact'>
-          <div>HELLO</div>
+          <div class='card-container'>
+            <div><img class='profile-pic' src='scholar_big.jpg' ></div>
+            <div class='contact-container'>
+              <div>Aidan Young</div>
+              <div>New York, NY | Durham, NC</div>
+              <div>School Email: aidan.young@duke.edu</div>
+              <div>Personal Email: aidantlyoung@gmail.com</div>
+            </div>
+          </div>
         </div>
     </header>
-    
   <div class="background"></div>
 
   <section class="section">

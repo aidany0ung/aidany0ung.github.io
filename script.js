@@ -1,3 +1,6 @@
+const text = document.getElementById('expand-header');
+let rotated = false;
+
 document.addEventListener('DOMContentLoaded', () => {
   const background = document.querySelector('.background');
   const sections = document.querySelectorAll('.section');
@@ -80,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
   function toggleDropdown() {
-    var dropdown = document.getElementById("contact");
+    var dropdown = document.getElementById("arrow");
     var isHidden = dropdown.style.display === "none";
 
     if (isHidden) {
@@ -91,6 +94,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function toggleTwo() {
+    if (rotated) {
+      text.style.transform = 'rotate(0deg)';
+      rotated = false;
+    } else {
+      text.style.transition = 'transform 0.5s';
+      text.style.transform = 'rotate(180deg)';
+      rotated = true;
+    }
     var box = document.getElementById('contact');
     if (!box.style.display || box.style.display == "none") {
         box.style.display = "block";
