@@ -1,0 +1,69 @@
+<!--Boilerplate HTML-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.25.0/cytoscape.min.js" integrity="sha512-QWYhhlZXfhMzyiML+xSFHYINwLvLsVd2Ex6QKA4JQzulKAsXiHoNXN1gCgB7GUaVL8xGI9L6XXyqPJVLASVP7g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        var cy = cytoscape({
+
+container: document.getElementById('cy'), // container to render in
+
+elements: [ // list of graph elements to start with
+  { // node a
+    data: { id: 'a' }
+  },
+  { // node b
+    data: { id: 'b' }
+  },
+  { // edge ab
+    data: { id: 'ab', source: 'a', target: 'b' }
+  }
+],
+
+style: [ // the stylesheet for the graph
+  {
+    selector: 'node',
+    style: {
+      'background-color': '#666',
+      'label': 'data(id)'
+    }
+  },
+
+  {
+    selector: 'edge',
+    style: {
+      'width': 3,
+      'line-color': '#ccc',
+      'target-arrow-color': '#ccc',
+      'target-arrow-shape': 'triangle',
+      'curve-style': 'bezier'
+    }
+  }
+],
+
+layout: {
+  name: 'grid',
+  rows: 1
+}
+
+});
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Home</h1>
+        </div>
+        <div class="content">
+            <h2>Home</h2>
+            <p>This is the home page.</p>
+            <div id="cy"></div>
+        </div>
+        <div class="footer">
+            <p>Footer</p>
+        </div>
+    </div>
+</html>
