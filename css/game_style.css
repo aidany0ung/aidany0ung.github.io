@@ -1,0 +1,149 @@
+#griddy {
+
+    margin: 20px;
+    background-color: white;
+    border-radius: 10px;
+}
+
+#heady {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0px 20px;
+}
+
+#heady div {
+    margin-top: 10px;
+    box-shadow: 5px 5px 0px#000;
+    background-color: #fff;
+    border: 1px solid #000;
+    padding: 3px 5px;
+    color: inherit;
+}
+
+.cntrl {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+#heady > a {
+    text-decoration: none;
+    color: #000
+}
+
+#griddy * {
+    margin: 0;
+    padding: 0;
+    width: 4px;
+    height: 4px;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.alive {
+    background-color: #fff;
+}
+
+.dead {
+    background-color: #000;
+}
+
+.rot {
+    background-color: gray;
+}
+
+.red {
+    background-color: red;
+}
+
+.blue {
+    background-color: blue;
+}
+
+.green {
+    background-color: green;
+}
+
+.orange {
+    background-color: orange;
+}
+
+.purple {
+    background-color: purple;
+}
+
+.yellow {
+    background-color: yellow;
+}
+
+#panelcontainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.title {
+    font-size: 1em;
+    margin-bottom: 10px;
+    font-family: "Roboto", sans-serif;
+}
+
+@media screen and (max-width: 600px) {
+    #griddy {
+        margin: 0;
+        margin-top: 15px;
+    }
+    br {
+        display: none;
+    }
+    .cntrl {
+        flex-direction: column;
+    }
+    #panelcontainer{
+        flex-direction: row !important;
+    }
+}
+
+
+/* The slider itself */
+.slider {
+    -webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    width: 100%; /* Full-width */
+    height: 15px; /* Specified height */
+    background: #d3d3d3; /* Grey background */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+  }
+  
+  /* Mouse-over effects */
+  .slider:hover {
+    opacity: 1; /* Fully shown on mouse-over */
+  }
+  
+  /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */ 
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 15px; /* Set a specific slider handle width */
+    height: 15px; /* Slider handle height */
+    background: #000; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 15px; /* Set a specific slider handle width */
+    height: 15px; /* Slider handle height */
+    background: #04AA6D; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+  }

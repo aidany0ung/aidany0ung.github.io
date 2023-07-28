@@ -1,0 +1,283 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overscroll-behavior: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+body {
+    background-image: radial-gradient(gray 1px, transparent 0);
+    background-size: 10px 10px, 10px 10px;
+    overscroll-behavior: none;
+}
+
+#launch {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    padding: 0px 100px;
+}
+
+#launch > .container {
+    box-shadow: 12px 12px 0px 0px rgba(0, 0, 0, 1);
+    border: 1px solid #000;
+    background-color: #fff;
+    height: auto;
+    width: auto;
+    padding: 10px;
+}
+
+#launch > .container > p {
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    
+}
+
+.forward {
+    background-color: #000;
+    margin: 20px 10px 0px 10px;
+    color: #fff;
+    padding: 5px 8px;
+}
+
+#navbuttons {
+    display: flex;
+}
+
+#navbuttons >  a:link {
+    text-decoration: none;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    height: 100%;
+    padding: 20px;
+    position: relative;
+}
+
+.sidebar {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.main {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex: 9;
+}
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    border: 1px solid #000;
+    box-shadow: 7px 7px;
+    padding: 0px;
+    z-index: 1;
+    margin: 10px;
+    height: 300px;
+    width: 300px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-radius: 10px;
+}
+
+.bar {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    width: 100%;
+    border-bottom: 1px solid black;
+    margin: 0px;
+    background-color: #ccc;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    margin-bottom: 0px !important;
+}
+
+.bar > * {
+    margin: 5px;
+}
+
+.sidebar-text{
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-family: "Ramona", sans-serif;
+    font-size: 40px;
+    font-weight: 900;
+    color: #555;
+    margin-top: 20px;
+    margin-right: auto;
+    margin-left: auto;
+    letter-spacing : -10px;
+}
+
+.piccard > img:hover {
+    filter: hue-rotate(180deg);
+    transition: saturate() .5s ease;
+}
+
+.card > * {
+    margin-bottom: 5px;
+}
+
+.icons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.icons > * {
+    margin-left: 5px
+}
+
+.background-text {
+    position: absolute;
+    margin-top: 50vh;
+    font-family: "Roboto", sans-serif;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 60px;
+    color: #616161;
+    text-transform: uppercase;
+    letter-spacing: 0px;
+    opacity: .5;
+    transform: rotate(-30deg);
+    z-index: -1; /* Set a negative z-index to appear behind other elements */
+  }
+
+  .piccard {
+    border: 2.5px solid #000;
+    box-shadow: 7px 7px;
+    padding: 10px;
+    z-index: 1;
+    margin: 10px;
+    width: 300px;
+    height: 300px;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  #header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: #fff;
+    border-bottom: 1px solid #000;
+    flex-direction: row;
+    border-radius: 5px;
+  }
+
+#header > * {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 20px;
+}
+
+.card > img {
+    width: 100%;
+    height: auto;
+
+}
+
+.card-title{
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    margin: 0px;
+}
+
+#name {
+    font-family: 'Ramona';
+    font-size: 50px;
+}
+
+@font-face {
+    font-family: 'Redlands';
+    src: url("../RedlandFree.ttf");
+}
+
+@font-face {
+    font-family: "Saint Regus";
+    src: url("../sr.woff");
+}
+
+@font-face {
+    font-family: "Harmond";
+    src: url("../Harmond-ExtraBoldExpanded.otf");
+}
+
+@font-face {
+    font-family: "Magilio";
+    src: url("../MagilioRegular.ttf");
+}
+
+@font-face {
+    font-family: "Asikue";
+    src: url("../Asikue-Regular.ttf");
+}
+
+@font-face {
+    font-family: "Enoway";
+    src: url("../Enoway Personal Use.ttf");
+}
+
+@font-face {
+    font-family: "Ragina";
+    src: url("../Ragina.otf");
+}
+
+@font-face {
+    font-family: "Regard";
+    src: url("../Regarn-Light.ttf");
+}
+
+@font-face {
+    font-family: "Ramona";
+    src: url("../Ramona-Bold.ttf");
+}
+
+/* Write css to resize font on screen sizes less than 600px width */
+@media screen and (max-width: 700px) {
+    #name {
+        font-size: 20px;
+    }
+    .headericon img{
+        width: 25px;
+        height: auto;
+    }
+}

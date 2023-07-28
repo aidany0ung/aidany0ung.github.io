@@ -1,0 +1,31 @@
+<!--Boilerplate home.html-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Aidan Young - Game of Life 2</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/game_style.css">
+
+</head>
+<body>
+    <div id="heady">
+        <a href="primitive.html"><div class='navbtn'><<<</div></a>
+        <a href="gol3.html"><div class='navbtn'>>>></div></a>
+    </div>
+    <div class='cntrl'>
+        <div id='griddy'></div>
+        <div id='panelcontainer'>
+            <div class="card">
+                <div id = "timetitle" class="title"></div>
+                <input type="range" min="0" max="11" value="8" class="slider" id="timeRange">
+            </div>
+            <div class="card">
+                <div id = "souptitle" class="title"></div>
+                <input type="range" min="0" max="10" value="2" class="slider" id="soupRange">
+            </div>
+        </div>
+    </div>
+    <script src="update2.js"></script>
+</body>
+</html>

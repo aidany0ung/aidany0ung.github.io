@@ -1,58 +1,69 @@
+<!--Boilerplate HTML-->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Aidan Young</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.25.0/cytoscape.min.js" integrity="sha512-QWYhhlZXfhMzyiML+xSFHYINwLvLsVd2Ex6QKA4JQzulKAsXiHoNXN1gCgB7GUaVL8xGI9L6XXyqPJVLASVP7g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        var cy = cytoscape({
+
+container: document.getElementById('cy'), // container to render in
+
+elements: [ // list of graph elements to start with
+  { // node a
+    data: { id: 'a' }
+  },
+  { // node b
+    data: { id: 'b' }
+  },
+  { // edge ab
+    data: { id: 'ab', source: 'a', target: 'b' }
+  }
+],
+
+style: [ // the stylesheet for the graph
+  {
+    selector: 'node',
+    style: {
+      'background-color': '#666',
+      'label': 'data(id)'
+    }
+  },
+
+  {
+    selector: 'edge',
+    style: {
+      'width': 3,
+      'line-color': '#ccc',
+      'target-arrow-color': '#ccc',
+      'target-arrow-shape': 'triangle',
+      'curve-style': 'bezier'
+    }
+  }
+],
+
+layout: {
+  name: 'grid',
+  rows: 1
+}
+
+});
+    </script>
 </head>
 <body>
-    <header class="header">
-        <div class="header-name">aidan</div>
-        <!--<div class="header-img"><img src="profilegray.png" alt="Image"></div>-->
-        <button class='expand-header header-name' id='expand-header' onclick="toggleTwo()"><img id='arrow' src='arrowasset.svg' width="30px"></button>
-        <div class="header-name">young</div>
-        <div class='header-toexpand' id='contact'>
-          <div class='card-container'>
-            <div><img class='profile-pic' src='scholar_big.jpg' ></div>
-            <div class='contact-container'>
-              <div>Aidan Young</div>
-              <div>New York, NY | Durham, NC</div>
-              <div>School Email: aidan.young@duke.edu</div>
-              <div>Personal Email: aidantlyoung@gmail.com</div>
-            </div>
-          </div>
+    <div class="container">
+        <div class="header">
+            <h1>Home</h1>
         </div>
-    </header>
-  <div class="background"></div>
-
-  <section class="section">
-    <div class="content">
-      <h2>Section 1</h2>
-      <p>Content for Section 1</p>
+        <div class="content">
+            <h2>Home</h2>
+            <p>This is the home page.</p>
+            <div id="cy"></div>
+        </div>
+        <div class="footer">
+            <p>Footer</p>
+        </div>
     </div>
-  </section>
-  
-  <section class="section">
-    <div class="content">
-      <h2>Section 2</h2>
-      <p>Content for Section 2</p>
-    </div>
-  </section>
-  
-  <section class="section">
-    <div class="content">
-      <h2>Section 3</h2>
-      <p>Content for Section 3</p>
-    </div>
-  </section>
-  
-  <section class="section">
-    <div class="content">
-      <h2>Section 4</h2>
-      <p>Content for Section 4</p>
-    </div>
-  </section>
-  
-  <script src="script.js"></script>
-</body>
 </html>
