@@ -11,9 +11,8 @@
     
     <div id="home">
         <div id="header">
-            
             <div class="headericon">
-                <a href="https://www.linkedin.com/in/aidantlyoung" target="_blank"><img src="assets/images/li.png" height="30px"></a>
+                <a id='linkedin' href="https://www.linkedin.com/in/aidantlyoung" target="_blank"><img src="assets/images/li.png" height="30px"></a>
             </div>
             <div class="headericon">
                 <img src="assets/images/gh.png" height="30px">
@@ -25,12 +24,14 @@
             <div class="headericon">
                 <a href="WorkingResumeOct10.pdf" target="_blank"><img src="assets/images/resume.png" height="30px"></a>
             </div>
+            <!--<input type="color" id="colorpicker" value="#ffffff">-->
         </div>
         <div class="container" id="projects">
             <!--<div class="background-text">PROJECTS</div>-->
             <div class="sidebar">
                 <div class="sidebar-text">PROJECTS</div>
             </div>
+            <a href="https://www.stork.azurewebsites.net">
             <div class='main'>
                 <div class="card">
                     <div class="bar">
@@ -39,12 +40,13 @@
                             <img src="assets/images/midicon.png" height="15px">
                             <img src="assets/images/lasticon.png" height="15px">
                         </div>
-                        <div class="card-title">Environmental News</div>
+                        <div class="card-title"><h3>Environmental News</h3></div>
                     </div>
                     <img src="dummy.png" height="100px">
                     
-                    <div class="card-text">Description</div>
-                </div>
+                    <div class="card-text">Scrape news sites, perform sentiment analysis, and present it with a ArcGIS-js globe</div>
+                </div></a>
+                <a href="https://www.birdrangemapper.com">
                 <div class="card">
                     <div class="bar">
                         <div class="icons">
@@ -52,12 +54,12 @@
                             <img src="assets/images/midicon.png" height="15px">
                             <img src="assets/images/lasticon.png" height="15px">
                         </div>
-                        <div class="card-title">Bird Range Mapper</div>
+                        <div class="card-title"><h3>Bird Range Mapper</h3></div>
                     </div>
                     <img src="dummy.png" height="100px">
 
-                    <div class="card-text">Description</div>
-                </div>
+                    <div class="card-text">Use RShiny intelligently and responsively display a large geospatial dataset for Saving Nature</div>
+                </div></a>
                 <div class="card">
                     <div class="bar">
                         <div class="icons">
@@ -65,7 +67,7 @@
                             <img src="assets/images/midicon.png" height="15px">
                             <img src="assets/images/lasticon.png" height="15px">
                         </div>
-                        <div class="card-title">Title</div>
+                        <div class="card-title"><h3>Title</h3></div>
                     </div>
                     <img src="dummy.png">
                     <div class="card-text">Description</div>
@@ -112,5 +114,47 @@
         </div>
     </div>
     <script src="font.js"></script>
+    <script>
+        function hexToHSL(hex, valuesOnly = false){
+            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                r = parseInt(result[1],16);
+                g = parseInt(result[2],16);
+                b = parseInt(result[3],16);
+                var cssString = '';
+                r /= 255, g /= 255, b /= 255;
+                var max = Math.max(r,g,b), min = Math.min(r,g,b);
+                var h,s,l = (max+min)/2;
+                if (max==min){
+                    h = s = 0;
+                }else{
+                    var d = max - min;
+                    s = l < 0.5 ? d / (2-max-min) : d / (max + min);
+                    switch(max) {
+                        case r: h = (g-b) / d + (g < b ? 6 : 0); break;
+                        case g: h = (b - r) / d + 2; break;
+                        case b: h = (r - g) / d + 4; break;
+                    }
+                    h /= 6;
+                }
+            
+                h = Math.round(h*360);
+                s = 100;
+                l = 95;
+
+                cssString = h + ',' + s + "%," + l + "%";
+                cssString = !valuesOnly ? 'hsl(' + cssString + ')' : cssString;
+
+                return h;
+        }
+
+        var root = document.querySelector(":root");
+        var picker = document.getElementById('colorpicker');
+        picker.addEventListener('input', function(){
+            hue = hexToHSL(picker.value);
+            root.style.setProperty('--off-white','hsl('+hue+",100%,95%");
+            root.style.setProperty('--off-gray','hsl('+hue+",100%,70%");
+            root.style.setProperty('--off-light-gray','hsl('+hue+",100%,85%");
+        })
+    </script>
 </body>
 </html>
