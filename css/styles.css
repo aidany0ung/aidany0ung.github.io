@@ -69,8 +69,9 @@ body {
 }
 
 .container {
-    display: flex;
+    display: inline-flex;
     flex-direction: row;
+    justify-content: space-between;
     width: 100vw;
     height: 100%;
     padding: 20px;
@@ -92,7 +93,17 @@ body {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.centering-wrapper {
+    display: relative;
+    justify-content: center;
+    align-items: center;
     flex: 9;
+
 }
 
 .header{
@@ -362,11 +373,10 @@ body {
     flex-direction: column;
     flex-wrap: wrap;    
     background-color: none;
-    transition: opacity 1s ease-in-out;
-  }
-  
-  /* Links inside the dropdown, make them be gray circles */
-  .dropdown-content a {
+}
+
+/* Links inside the dropdown, make them be gray circles */
+.dropdown-content a {
     color: black;
     padding: 0px 0px;
     text-decoration: none;
@@ -379,14 +389,19 @@ body {
     width: 0px;
     height: 0px;
     opacity: 0;
-  }
-  
-  
+    transition: opacity 0.5s ease-in-out, width 0.5s ease-in-out, height 0.5s ease-in-out, margin 0.5s ease-in-out;
+}
 
 .dropdown:hover .dropdown-content a {
     opacity: 1;
     width: 50px;
     height: 50px;
     margin: 5px;
-    transition: opacity 0.5s ease-in-out, width 0.5s ease-in-out, height 0.5s ease-in-out, margin 0.5s ease-in-out;
+}
+
+.dummy {
+    opacity: 0 !important;
+}
+.dummy * {
+    opacity: 0 !important;
 }
