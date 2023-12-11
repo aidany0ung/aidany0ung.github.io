@@ -73,7 +73,8 @@
                     <img src="assets/images/scrapeimg.png">
                     <div class="card-text">Use Beautiful Soup to scrape environmental news articles, perform sentiment analysis</div>
                 </div></a>
-                <a href="https://medium.com/@myukelis23/using-neural-networks-to-predict-blood-brain-barrier-penetration-163b798b394a" target="_blank" rel="noopener noreferrer">
+                <div class="dropdown">
+                    <a href="https://medium.com/@myukelis23/using-neural-networks-to-predict-blood-brain-barrier-penetration-163b798b394a" target="_blank" rel="noopener noreferrer">
                     <div class="card">
                         <div class="bar">
                             <div class="icons">
@@ -83,10 +84,32 @@
                             </div>
                             <div class="card-title"><h3>Blood-Brain Barrier</h3></div>
                         </div>
-                        <img src="assets/images/bppp.png" height="100px">
-    
+                        <img src="assets/images/bppp.png" style="width: 100%;">
                         <div class="card-text">Used Tensorflow & Spektral to see how different model architectures can predict how a molecule enters the brain</div>
-                    </div></a>
+                    </div>
+                </a>
+                        <div class="dropdown-content">
+                            <a href="https://www.google.com">Hi</a>
+                            <a href="#">Hello</a>
+                            <a href="#">Bye</a>
+                        </div>
+                    </div>
+                
+                    
+                    <a href="finalproject_group18/src/engine.html" target="_blank" rel="noopener noreferrer">
+                        <div class="card">
+                            <div class="bar">
+                                <div class="icons">
+                                    <img src="assets/images/closeicon.png" height="15px">
+                                    <img src="assets/images/midicon.png" height="15px">
+                                    <img src="assets/images/lasticon.png" height="15px">
+                                </div>
+                                <div class="card-title"><h3>Wave Simulation</h3></div>
+                            </div>
+                            <img src="assets/images/graphics.png" height="100px">
+        
+                            <div class="card-text">Used HTML, JS, WebGL, and GLSL to create a wave simulation without any external engine using Perlin Noise</div>
+                        </div></a>
             </div>
         </div>
         <div class="container" id="photo">
@@ -122,6 +145,7 @@
     </div>
     <script src="font.js"></script>
     <script>
+
         function hexToHSL(hex, valuesOnly = false){
             var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
                 r = parseInt(result[1],16);

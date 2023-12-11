@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>WebGL Texturing</title>
+</head>
+<body>
+    <button id="startbutton" width="300" height="300" onclick="load()" style="
+        background-color: #111111; border: none; color: white; padding: 50px 50px; text-align: center;
+        text-decoration: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        font-size: 50px;">Click here to start the animation. <br /> Use your a and d keys to move the camera</button>
+	<canvas width="500" height="500" id="webgl-canvas"></canvas>
+
+    <script src="../common/webgl-debug.js"></script>
+    <script src="../common/webgl-lint.js"></script>
+    <script src="../common/math.js"></script>
+    <script src="../common/gl-utils.js"></script>
+    <script src="../common/input.js"></script>
+    <script src="../common/renderloop.js"></script>
+    <script src="../common/camera.js"></script>
+    <script src="../common/grid.js"></script>
+    <script src="../common/dat.gui.min.js"></script>
+    <script src="../common/stats.min.js"></script>
+    <script src = "../common/howler.js"></script>
+
+    <script src="renderer.js"></script>
+    <script src="oceanRenderer.js"></script>
+    <script src="boatRenderer.js"></script>
+    <script src="modeltransform.js"></script>
+    <script src="primitives.js"></script>
+    <script src="../common/objparser.js"></script>
+
+    <script type="text/javascript">
+        "use strict"; // use strict javascript compiling
+
+        var sound = new Howl({
+            src: ['ressources/waves.mp3'],
+            autoplay: true,
+            loop: true,
+            volume: 0.025,
+        });
+
+        sound.play();
+
+        //--------------------------------------------------
+        // Global Cashes
+        //--------------------------------------------------
+        var MeshCache = {}; // here all mesh objects are stored, see GLUtils.createMesh() for details on how a mesh is added.
+        var TextureCache = {}; // here all texture objects are stored, see GLUtils.loadTexture() for details on how a texture is added.
+
+        // -----------------------------------------
+        // Global variables
+        // -----------------------------------------
+        var gl;
+        var canvas;
+        var renderLoop;
+
+        var g_camera;
+        var g_cameraController;
+
+        //var ground, houseBase, houseRoof, treeTrunk, door,treeCrown,pumpkin, pumpkin2;
+        var ocean,hull;
+        var g_boat_renderer;
+
+        var textures;
+        var hullData;
+        var sub;
+
+        var g_grid;
+        var gui;
+        var colorData;
+
+        var g_renderer;
+        var g_ocean_renderer;
+        
+
+        // lighting
+        var g_lightingData = {
+            directionalLight: new V3(-1, -1, -0.5).normalize(), // light direction
+            directionalColor: new V3(1.0, 1.0, 1.0), // light color by default white
+            ambientColor: new V3(0.2, 0.2, 0.2) // dark gray
+        }
+
+        // This will execute the setup function once the whole document has been loaded.
+        function load(){
+            var button = document.getElementById("startbutton");
+            button.remove();
+            setup();
+        }
+
+        function setup(){
+            canvas = document.getElementById("webgl-canvas");
+            gl = GLUtils.createWebGLInstance(canvas, true, true); // fullscreen = true, debugging = true
+            gl.clearColor(0.5, 0.7, 0.95, 1); // set clear color (RGBA)
+            gl.fitScreen();
+            gl.enable(gl.DEPTH_TEST);
+            gl.depthFunc(gl.LEQUAL);
+
+            // our shader files are loaded here. Once completed, init is called
+            // for now there is only the standardShader, but you can add more by
+            // simply adding another path into the array shaderPaths.
+            let shaderPaths = ["shaders/oceanShader.glsl", "shaders/boatShader.glsl"];
+            GLUtils.loadShaders(shaderPaths, init);
+        }
+
+        function init(){
+            Input.initialize(canvas);
+            g_ocean_renderer = new OceanRenderer("oceanShader");
+            g_boat_renderer = new BoatRenderer("boatShader");
+
+            g_camera = new PerspectiveCamera(45, 0.1, 1000, canvas.width / canvas.height);
+            g_cameraController = new CustomCameraController(canvas, g_camera);
+            g_cameraController.target.set(0,0,0);
+            g_camera[12] = 0;
+            g_camera[13] = 20;
+            g_camera[14] = 0;
+            g_camera.lookAt(new V3(0,20,0),new V3(0,0,0));
+            GLUtils.loadTexture('uv-test','ressources/uv-test.png');
+            GLUtils.loadTexture('sea','ressources/sea.jpg');
+            GLUtils.loadTexture('wood','ressources/goodWood.png');
+            GLUtils.loadTexture('metal','ressources/metal.jpg');
+
+            let subMesh = OBJLoader.getMesh('subMesh','ressources/Submarines.obj');
+
+           
+
+            // Create a brown mat for the hull
+            let hullMat = {tint: new V3(0.52,0.37,0.26), mainTexture: 'wood',  shininess: 25};
+            let subMat = {tint: new V3(1,1,1), mainTexture: 'metal',  shininess: 25};
+
+            //change the mat of this later
+            sub = new ModelTransform(subMesh, subMat);
+            sub.scale.set(0.2,0.2,0.2);
+            sub.position.set(2.5,-.25,-1);
+
+            // Load in noise maps for ocean height ('ressources/noisesmall.png', 'ressources/noiselarge.png', 'ressources/noisemedium.png')
+            let x = GLUtils.loadTexture('noise-small','ressources/noisesmall.png');
+            let y = GLUtils.loadTexture('noise-medium','ressources/noisemedium.png');
+            let z = GLUtils.loadTexture('noise-large','ressources/noiselarge.png');
+
+            textures = [x, y, z];
+
+            let x_dim = 4;
+            let y_dim = 1;
+            let z_dim = 2;
+
+            colorData = {k: 0.2, g:2.0};
+
+            gui = new dat.GUI();
+            gui.addFolder("Color Data");
+            gui.add(colorData, "k", -10, 10);
+            gui.add(colorData, "g", -10, 10);
+            gui.close()
+            g_ocean_renderer.customAddTextures(textures);
+            g_boat_renderer.customAddTextures(textures);
+
+            let uvTestMat = {tint: new V3(1,1,1), mainTexture: 'uv-test'};
+            let seaMat = {tint: new V3(1,1,1), mainTexture: 'sea'};
+            ocean = new ModelTransform(Primitives.Plane.getMesh(), seaMat);
+
+
+            hull = new ModelTransform(Primitives.Cube.getMesh(),hullMat);
+
+           
+
+            hull.scale.set(1.5, 0.4, 0.9);
+            hull.position.set(4.5, 0.8, 6);
+
+
+            renderLoop = new RenderLoop(draw).start();
+        }
+
+        function draw(deltaTime){
+            
+            Input.update();
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+            
+            g_cameraController.distance += Math.sin(Time.time)*.0025
+            g_cameraController.pitch += Math.sin(Time.time)*.005;
+            g_cameraController.update();
+            
+            hull.position.set(hull.position.x - deltaTime/10, hull.position.y, hull.position.z);
+
+            sub.update()
+            ocean.update()
+            hull.update()
+
+            let shaderData = {lightingData: g_lightingData, time: Time.time, colorData: {k: colorData.k, g: colorData.g}};
+
+            g_ocean_renderer.drawModel(ocean, g_camera, shaderData);
+            g_boat_renderer.drawModel(sub, g_camera, shaderData);
+        }
+
+        
+    </script>
+</body>
+</html>
