@@ -16,13 +16,19 @@
     <div class='cntrl'>
         <div id='griddy'></div>
         <div id='panelcontainer'>
-            <div class="card">
+            <div class="gol-card">
                 <div id = "timetitle" class="title"></div>
                 <input type="range" min="0" max="11" value="8" class="slider" id="timeRange">
             </div>
-            <div class="card">
+            <div class="gol-card">
                 <div id = "souptitle" class="title"></div>
                 <input type="range" min="0" max="10" value="2" class="slider" id="soupRange">
+            </div>
+            <div class="gol-card">
+                <div class="card-text">
+                    <h4 style="font-weight: 700 !important;">Adding Species and Rot State</h4>
+                    <p>In this version, any cell that is set from alive to dead is set first to a more inert rotting state, in which it is not alive, but also cannot be updated in the same way a dead cell can be. Additionally, I add two different species. A cell of the same species counts as a living cell, but a cell of a different species does not. This two additions reduce the entropy of the system, causing a more boring equilibrium faster.</p>
+                </div>
             </div>
         </div>
     </div>

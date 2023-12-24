@@ -181,6 +181,10 @@ body {
     transition: saturate() .5s ease;
 }
 
+.piccard > img {
+    margin-right: 100%;
+}
+
 .icons {
     display: flex;
     flex-direction: row;
@@ -384,12 +388,12 @@ body {
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    background-color: #f1f1f1;
+    background-color: none;
     margin: 0px;
     width: 0px;
     height: 0px;
     opacity: 0;
-    transition: opacity 0.5s ease-in-out, width 0.5s ease-in-out, height 0.5s ease-in-out, margin 0.5s ease-in-out;
+    transition: filter 0.5s ease-in-out, background-color 0.5s ease-in-out, opacity 0.5s ease-in-out, width 0.5s ease-in-out, height 0.5s ease-in-out, margin 0.5s ease-in-out;
 }
 
 .dropdown:hover .dropdown-content a {
@@ -397,7 +401,16 @@ body {
     width: 50px;
     height: 50px;
     margin: 5px;
+    background-color: #ddd;
+    /*border: 1px solid black;*/
 }
+
+.dropdown > .dropdown-content > a:hover {
+    /* invert the color*/
+    filter: invert(100%);
+}
+
+
 
 .dummy {
     opacity: 0 !important;
