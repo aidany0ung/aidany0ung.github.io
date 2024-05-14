@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Upload</title>
+    
+    <style>
+
+        /* Add the oceanseries.ttf font in the static folder */
+        @font-face {
+            font-family: 'oceanseries';
+            src: url('oceanseries.ttf') format('truetype'); /* TODO */
+        }
+        @font-face {
+            font-family: 'faltura';
+            src: url('/falturaanimals.ttf') format('truetype'); /* TODO */
+        }
+        canvas {
+            border: 0px;
+        }
+
+        body {
+            background-color: skyblue;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        #main {
+            height: 100%;
+        }
+
+        .inputs {
+            width: 3vw;
+            /* Style it so there is only a black underline */
+            border: none;
+            font-size: 17;
+            border-bottom: 1px solid black;
+            background-color: transparent;
+            transition: border-bottom 0.3s;
+            transition: width 0.3s;
+            /* Remove the blue outline when focused */
+            outline: none;
+            text-align: center;
+
+        }
+        .inputs:focus {
+            border-bottom: 3px solid black;
+            width: 3.25vw;
+        }
+        #showLen {
+            margin: 15px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        #showArea {
+            margin: 15px;
+            margin-top: 0px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .box {
+            border: 1px solid black;
+            box-shadow: 5px 5px black;
+            background-color: white;
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            
+        }
+
+        .hide {
+            display: none !important;
+        }
+
+        #title {
+            font-family: 'faltura';
+            font-size: 100px;
+            text-align: center;
+            margin: 10px;
+            margin-top: 20px;
+        }
+        /* Center this element verticall and horizontally */
+        #uploadButton {
+            display: block;
+            margin: auto auto;
+            margin-top: 20%;
+            background-color: #5275F6;
+            width: 170px;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 20px;
+            border-radius: 20px;
+            text-align: center;
+            padding: 10px;
+            /* 3px shadow in all directions */
+            box-shadow:
+                0 1px 1px hsl(0deg 0% 0% / 0.075),
+                0 2px 2px hsl(0deg 0% 0% / 0.075),
+                0 4px 4px hsl(0deg 0% 0% / 0.075),
+                0 8px 8px hsl(0deg 0% 0% / 0.075),
+                0 16px 16px hsl(0deg 0% 0% / 0.075)
+            ;
+            transition: background-color 0.3s;
+        }
+
+        #uploadButton:hover {
+            cursor: pointer;
+            background-color: #4767DA;
+        }
+
+        .circleButton {
+            display: block;
+            background-color: #5275F6;
+            width: 100%;
+            margin: 10px;
+            border: none;
+            color: white;
+
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 15px;
+            border-radius: 20px;
+            text-align: center;
+            padding: 10px;
+            /* 3px shadow in all directions */
+            box-shadow:
+                0 1px 1px hsl(0deg 0% 0% / 0.075),
+                0 2px 2px hsl(0deg 0% 0% / 0.075),
+                0 4px 4px hsl(0deg 0% 0% / 0.075),
+                0 8px 8px hsl(0deg 0% 0% / 0.075),
+                0 16px 16px hsl(0deg 0% 0% / 0.075)
+            ;
+            transition: background-color 0.3s;
+        }
+
+        .circleButton:hover {
+            cursor: pointer;
+            background-color: #4767DA;
+        }
+
+
+
+        /* Make the container to place whatever is in it in the center */
+        #cv_container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin: auto auto;
+        }
+
+        /* Make the canvas fill the entire cv_container */
+        #canvas {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="title">WhaleScale</div>
+    <input type="file" id="imageUpload" hidden>
+    <label for="imageUpload" id="uploadButton">PICK IMAGE</label>
+    <div id="main" style="display: none;">
+        <div id="cv_container" class="box">
+            <!--hide canvas at first -->
+            <canvas id="canvas"></canvas>
+        </div>
+        <div id='sidebar' style="float: right; display: flex; flex-direction: column; justify-content: center; margin-right: auto; width: 20vw;">
+            <div class="box" style="padding:none !important;">
+                <p id="msg" style="margin: 20px;"></p>
+                <p id="showLen" class="hide">
+
+                </p>
+                <p id="showArea" class="hide">
+
+                </p>
+            </div>
+            <div class="box" style="display: flex; flex-direction: row; justify-content: space-between; padding: 10px">
+                <div style="display: flex; flex-direction: column;">
+                    <label for="focalLength">Focal Length (mm)</label>
+                    <label for="altitude">Altitude (m)</label>
+                    <label for="sensorWidth">Sensor Width (mm)</label>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <input  class='inputs' type="value" id="focalLength" >
+                    <input  class='inputs' type="value" id="altitude" >
+                    <input class='inputs' type="value" id="sensorWidth" >
+                </div>
+            </div>
+            <!--
+            <div class="box">
+                <input type="checkbox" id="edgeDetection" value="Use Edge Detection">
+                <input type="range" id="brightness" name="Max Thresh" min="0" max="100" value="100" step="1" hidden>
+                <input type="range" id="contrast" name="Max Thresh" min="0" max="127" value="90" step="1" hidden>
+                <input type="range" id="kernel" name="Min Thresh" min="1" max="10" value="3" step="1" hidden>
+            </div>
+            -->
+
+        
+            <div style="display: flex; flex-direction: row; align-items: center;">
+                <input class="circleButton" type="button" id="reset" value="RESET">
+                <input class="circleButton" type="button" id="erase" value="ERASE">
+            </div>
+            <!--
+            <div style="display: flex; flex-direction: row; ">
+                <input class="circleButton" type="button" id="download" value="Download">
+            </div>
+        -->
+        </div>
+    </div>
+    <!--Load OpenCV.js-->
+    <!--<script async src="https://docs.opencv.org/master/opencv.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/exifr/dist/lite.umd.js"></script>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const imageUpload = document.getElementById('imageUpload');
+        const uploadButton = document.getElementById('uploadButton');
+        const canvasContainer = document.getElementById('cv_container');
+        const reset = document.getElementById('reset');
+        const erase = document.getElementById('erase');
+        const sidebar = document.getElementById('sidebar');
+        var edgeToggle = false;
+        var canny = null;
+        var scaleFactor = null;
+
+        imageUpload.addEventListener('change', handleImageUpload);
+
+        let numPoints = 0;
+        let points = [];
+        let image = null;
+        let imgData = null;
+        let canDrawPerpendicular = false;
+        let imageDimensions = null;
+        let polygon = null;
+        let area = -1;
+        let length = -1;
+
+        function computeCanny() {
+            if (image !== null) {
+                console.log("YO");
+                let src = cv.imread(image);
+                let dst = new cv.Mat();
+                
+                cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY, 0);
+                // Apply GaussianBlur to reduce noise
+                cv.GaussianBlur(dst, dst, new cv.Size(parseInt(kernel.value), parseInt(kernel.value)), 0, 0, cv.BORDER_DEFAULT);
+                // Apply Sobel filters in the x and y directions
+                /* let grad_x = new cv.Mat();
+                let grad_y = new cv.Mat();
+                let abs_grad_x = new cv.Mat();
+                let abs_grad_y = new cv.Mat();
+                cv.Sobel(dst, grad_x, cv.CV_16S, 1, 0, 3, 1, 0, cv.BORDER_DEFAULT);
+                cv.Sobel(dst, grad_y, cv.CV_16S, 0, 1, 3, 1, 0, cv.BORDER_DEFAULT);
+                cv.convertScaleAbs(grad_x, abs_grad_x);
+                cv.convertScaleAbs(grad_y, abs_grad_y);
+                cv.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0, dst);
+                // Scale the image to fit the canvas
+                let scaledRaster = new cv.Mat();
+                cv.resize(dst, scaledRaster, new cv.Size(canvas.width, canvas.height), 0, 0, cv.INTER_AREA);
+                
+                canny = scaledRaster;
+                */
+                /*
+                // Apply GaussianBlur to reduce noise
+                cv.GaussianBlur(dst, dst, new cv.Size(parseInt(kernel.value), parseInt(kernel.value)), 0, 0, cv.BORDER_DEFAULT);
+                cv.Canny(dst, dst, 100, 100, 3, false);
+
+                // Generate and draw contours
+                let contours = new cv.MatVector();
+                let hierarchy = new cv.Mat();
+
+                
+                cv.findContours(dst, contours, hierarchy, cv.RETR_CCOMP, cv.CHAIN_APPROX_SIMPLE);
+                // Is there a way to dilate the contours to join them together? Answer: Yes, use cv.dilate
+                cv.dilate(dst, dst, cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(3, 3)), new cv.Point(-1, -1), 1, cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
+
+                // Make a new RGB image
+                let color = new cv.Scalar(255, 255, 255);
+                let dst2 = cv.Mat.zeros(dst.rows, dst.cols, cv.CV_8UC3);
+
+                for (let i = 0; i < contours.size(); ++i) {
+                    // Give each contour a random color
+                    let color = new cv.Scalar(Math.round(Math.random() * 255), Math.round(Math.random() * 255), Math.round(Math.random() * 255));
+                    cv.drawContours(dst2, contours, i, color, 1, cv.LINE_8, hierarchy, 100);
+
+                }
+
+                // Scale the image to fit the canvas
+                let scaledRaster = new cv.Mat();
+                cv.resize(dst2, scaledRaster, new cv.Size(canvas.width, canvas.height), 0, 0, cv.INTER_AREA);
+                
+                canny = scaledRaster;
+                */
+            }
+        }
+
+        erase.addEventListener('click', function(event){
+            numPoints = 0;
+            points = [];
+            canny = null;
+            polygon = null;
+            area = -1;
+            length = -1;
+            draw();
+
+            const sL = document.getElementById('showLen');
+            const sA = document.getElementById('showArea');
+            const msg = document.getElementById('msg');
+            
+
+            sL.innerHTML = '';
+            sA.innerHTML = '';
+
+            sL.classList.add('hide');
+            sA.classList.add('hide');
+
+            msg.classList.remove('hide');
+        })
+        
+       
+        
+    
+        reset.addEventListener('click',function(event) {
+            numPoints = 0;
+            points = [];
+            image = null;
+            imgData = null;
+            canDrawPerpendicular = false;
+            imageDimensions = null;
+            polygon = null;
+            canny = null;
+            area = -1;
+            length = -1;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            uploadButton.style.display = 'block';
+            canvasContainer.style.display = 'none';
+
+            const sL = document.getElementById('showLen');
+            const sA = document.getElementById('showArea');
+            const fL = document.getElementById('focalLength');
+            const a = document.getElementById('altitude');
+            const sW = document.getElementById('sensorWidth');
+            const msg = document.getElementById('msg');
+
+            sL.innerHTML = '';
+            sA.innerHTML = '';
+            fL.value = '';
+            a.value = '';
+            sW.value = '';
+            sL.classList.add('hide');
+            sA.classList.add('hide');
+            msg.classList.remove('hide');
+
+
+            // Make sure all children of 'sidebar' are hidden
+            for (let i = 0; i < sidebar.children.length; i++) {
+                sidebar.children[i].style.display = 'none';
+            }
+        });
+
+        function getMousePosition(){
+            // Get the mouse position relative to the canvas element, even if the screen is zoomed or scrolled
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            return {
+                x: (event.clientX - rect.left) * scaleX,
+                y: (event.clientY - rect.top) * scaleY
+            };
+        }
+
+        function determineCanvasSize(img_size) {
+            // The canvas needs to fit on the screen, and the image needs to fit on the canvas
+            // If the image is a portrait, set the canvas height to 75% of the screen height and the width to the height divided by the ratio
+            // If the image is a landscape, set the canvas width to 75% of the screen width and the height to the width times the ratio
+            const isPortrait = img_size.height > img_size.width;
+
+            // Get the ratio of the image dimensions
+            const ratio = img_size.height / img_size.width;
+
+            // If the the image is a portrait, set the canvas height .75 times the height of the image
+            // and the width to the height divided by the ratio
+            if (isPortrait) {
+                canvas.height = window.innerHeight * .75;
+                canvas.width = canvas.height / ratio;
+            } else {
+                // If the image is a landscape, set the canvas width to .75 times the width of the image
+                // and the height to the width times the ratio
+                canvas.width = window.innerWidth * .75;
+                canvas.height = canvas.width * ratio;
+            }
+
+            // Detect whether the canvas is too wide or too tall
+            if (canvas.width > window.innerWidth * .75) {
+                canvas.width = window.innerWidth * .75;
+                canvas.height = canvas.width * ratio;
+            }
+            if (canvas.height > window.innerHeight * .75) {
+                canvas.height = window.innerHeight * .75;
+                canvas.width = canvas.height / ratio;
+            }
+
+            // Store the scale factor
+            scaleFactor = canvas.width / img_size.width;
+        }
+
+
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            var exif_data;
+            
+
+            exifr.parse(file).then(output => {
+                exif_data = output;
+                var stringGenerator = "";
+                if (exif_data !== undefined) {
+                    console.log(exif_data);
+                    
+                    var model = null;
+                    // Check if the Model, MODEL, or model property is in the exif data
+
+                    // How do I see if a property is in an object? Answer: Use the 'in' operator
+                    if ('Model' in exif_data) {
+                        model = exif_data.Model;
+                    } else if ('MODEL' in exif_data) {
+                        model = exif_data.MODEL;
+                    } else if ('model' in exif_data) {
+                        model = exif_data.model;
+                    }
+
+                    // Check if the FocalLength, FOCAL_LENGTH, or focal_length property is in the exif data
+                    var focal_length = null;
+                    if ('FocalLength' in exif_data) {
+                        focal_length = exif_data.FocalLength;
+                    } else if ('FOCAL_LENGTH' in exif_data) {
+                        focal_length = exif_data.FOCAL_LENGTH;
+                    } else if ('focal_length' in exif_data) {
+                        focal_length = exif_data.focal_length;
+                    }
+
+                    if (model) {
+                        stringGenerator += "The model of the camera used to take the image appears to be " + model + ". You can use this to fill in the sensor width (mm).";
+                    } else {
+                        stringGenerator += "Please fill in the fields below."
+                    }
+
+                    document.getElementById('msg').innerText = stringGenerator;
+                    
+
+                    console.log(focal_length);
+
+                    if (focal_length) {
+                        // Remove the 'mm' from the focal length if it is present
+                        //focal_length = focal_length.replace('mm', '');
+
+                        // Set the focal length input to the focal length
+                        document.getElementById('focalLength').value = focal_length;
+                        // WHy is the focal length not being set? Answer: The focal length is being set, but the input is hidden by default
+                    }
+                }
+            
+                if (stringGenerator == "") {
+                    stringGenerator = "Please fill in the fields below.";
+                
+                }
+                document.getElementById('msg').innerText = stringGenerator;
+            
+            }).catch(error => {
+                document.getElementById('msg').innerText = "Please fill in the fields below.";
+            });
+
+
+            
+        
+            reader.onload = function(event) {
+                const img = new Image();
+                
+
+
+                // Hide the upload button
+                uploadButton.style.display = 'none';
+                // Show the canvas
+                // Get the main div
+                const main = document.getElementById('main');
+                main.style.display = 'flex';
+                canvasContainer.style.display = 'flex';
+                // Make sure all 'box' elements are hidden
+                // Make sure all children of 'sidebar' are hidden
+                for (let i = 0; i < sidebar.children.length; i++) {
+                    sidebar.children[i].style.display = 'flex';
+                }
+                img.onload = function() {
+                    
+                    // Calculate whether the image is portrait or landscape
+                    const isPortrait = img.height > img.width;
+
+                    imageDimensions = {
+                        width: img.width,
+                        height: img.height
+                    };
+
+                    determineCanvasSize(imageDimensions);
+
+                    imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    image = img;
+
+                    // Draw the image on the canvas
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    
+                   
+                    
+                    /*let src = cv.imread(img);
+
+                    var dst = new cv.Mat();
+                    // Convert to HSV
+                    cv.cvtColor(src, dst, cv.COLOR_RGBA2HSV, 0);
+                    // Now run edge detection! Should it be Sobel or Canny? Answer: Canny
+                    cv.Canny(dst, dst, 50, 100, 3, false);
+                    
+                    cv.imshow('canvas', dst);
+
+
+                    src.delete();
+                    dst.delete();*/
+                    // Retrieve image metadata
+                    const metadata = {
+                        focalLength: img.exifdata.focalLength,
+                        pixelDimensions: {
+                            width: img.width,
+                            height: img.height
+                        }
+                        // Add more metadata properties as needed
+                    };
+
+                    console.log(metadata);
+                };
+                img.src = event.target.result;
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        let currentPoint = null
+
+        // Allow the user to click to add a point to the canvas
+        canvas.addEventListener('click', function(event) {
+            // Get the mouse position relative to the canvas element, even if the screen is zoomed or scrolled
+            mousePos = getMousePosition();
+
+            let x = mousePos.x;
+            let y = mousePos.y;
+            if (numPoints < 2) {
+                numPoints++;
+                points.push({ x, y });
+            } else if (canDrawPerpendicular) {
+                if (numPoints % 2 === 1) {
+                    numPoints++;
+                    // The point now needs to be the closest point on the perpendicular line of the previous point to the cursor
+                            // Get the slope of the perpendicular line
+
+                    const m1 = (points[1].y - points[0].y) / (points[1].x - points[0].x);
+                    const m2 = -1 / m1;
+
+                            // Get the y-intercept of the perpendicular line, using points[points.length - 1] as the point on the line
+                    const b2 = points[points.length - 1].y - m2 * points[points.length - 1].x;
+
+                            // Given the cursor position, calculate the point on the perpendicular line that is closest to the cursor
+                    const x0 = (x + m2 * y - m2 * b2) / (m2 ** 2 + 1);
+                    const y0 = m2 * x0 + b2;
+                    x = x0;
+                    y = y0;
+                            
+                            // Set the current point to the closest point on the perpendicular line to the cursor
+                    points.push({x,y});
+                } else {
+                    numPoints++;
+                    points.push({ x, y });
+                }
+            }
+            triggerUpdate();
+            draw();
+            console.log(numPoints);
+        });
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+
+            // If numPoints >= 2, draw a line between the first two points
+            if (numPoints >= 2) {
+                ctx.beginPath();
+                ctx.strokeStyle = 'rgba(0, 0, 0, 1)';
+                ctx.moveTo(points[1].x, points[1].y);
+                ctx.lineTo(points[0].x, points[0].y);
+                ctx.stroke();
+            }
+            for (let i = 0; i < points.length; i++) {
+                if (i > 1) {
+                    if (i % 2 === 0) {
+                        // Calculate the reflection of the point i across the centerline
+                        // Get the slope of the centerline
+                        const m1 = (points[1].y - points[0].y) / (points[1].x - points[0].x);
+
+                        // Get the slope of the perpendicular line
+                        const m2 = -1 / m1;
+
+                        // Get the y-intercept of the centerline
+                        const b1 = points[0].y - m1 * points[0].x;
+                        // Get the y-intercept of the perpendicular line
+                        const b2 = points[i].y - m2 * points[i].x;
+
+                        // Calculate the point of intersection of the two lines
+                        const x0 = (b2 - b1) / (m1 - m2);
+                        const y0 = m1 * x0 + b1;
+                        
+                        // Reflect the point i across the centerline
+                        const x1 = 2 * x0 - points[i].x;
+                        const y1 = 2 * y0 - points[i].y;
+
+                        // Draw an 50% opaque yellow line that goes through point i, is perpendicular to the centerline, and goes through the entire canvas
+                        // Detect whether the centerline is > 45 degrees or < 45 degrees
+                
+                        let edge1x = 0;
+                        let edge1y = 0;
+                        let edge2x = 0;
+                        let edge2y = 0;
+                        
+                        if (b2 > 1 || b2 < -1) {
+                            // Given the perpendicular line, calculate the points where it intersects the edges of the canvas
+                            edge1y = b2;
+
+                            edge2x = canvas.width;
+                            edge2y = m2 * edge2x + b2;
+                        } else {
+                            edge1x = (edge1y - b2) / m2;
+
+                            edge2y = canvas.height;
+                            edge2x = (edge2y - b2) / m2;
+                        }
+                        ctx.beginPath();
+                        ctx.moveTo(edge1x, edge1y);
+                        ctx.lineTo(edge2x, edge2y);
+                        ctx.strokeStyle = 'rgba(255, 255, 0, 0.5)';
+                        ctx.stroke();
+                    }
+                    //ctx.beginPath();
+                    //ctx.arc(x1, y1, 5, 0, 2 * Math.PI);
+                    //ctx.fill();
+
+                }
+                ctx.beginPath();
+                if (i < 2) {
+                    ctx.fillStyle = 'black';
+                } else {
+                    ctx.fillStyle = 'red';
+                }
+                ctx.arc(points[i].x, points[i].y, 5, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+            /*
+            if (polygon !== null) {
+                // Draw the polygon
+                ctx.beginPath();
+                ctx.moveTo(polygon[0].x, polygon[0].y);
+                for (let i = 1; i < polygon.length; i++) {
+                    ctx.lineTo(polygon[i].x, polygon[i].y);
+                }
+                ctx.closePath();
+                ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
+                ctx.fill();
+            }
+            */
+            if (canny !== null) {
+                cv.imshow('canvas', canny);
+            }
+        }
+        
+        /*
+        window.addEventListener('keydown', function(event) {
+            if (event.key === 'Backspace') {
+                points.pop();
+                numPoints--;
+                draw();
+            }
+        });
+        */
+
+        // Follow the cursor on the canvas, with conditional logic based on the number of points
+        canvas.addEventListener('mousemove', function(event) {
+            
+            mousePos = getMousePosition();
+
+            const x = mousePos.x;
+            const y = mousePos.y;
+
+            if (points.length === 1) {
+                draw();
+                ctx.beginPath();
+                ctx.strokeStyle = 'rgba(0, 0, 0, 1)';
+                ctx.moveTo(x, y);
+                ctx.lineTo(points[0].x, points[0].y);
+                ctx.stroke();
+            }
+            
+
+
+            // Once the centerline has been established using the first two points, figure out the distance from the cursor to the centerline and draw a line that is perpendicular to the centerline and is bisected by the centerline
+            if (points.length >= 2) {
+                // Check if drawing the perpendicular line is possible
+                
+                // Get the slope of the centerline
+                const m1 = (points[1].y - points[0].y) / (points[1].x - points[0].x);
+
+                // Get the slope of the perpendicular line
+                const m2 = -1 / m1;
+
+                // Get the y-intercept of the centerline
+                const b1 = points[0].y - m1 * points[0].x;
+                // Get the y-intercept of the perpendicular line
+                const b2 = y - m2 * x;
+
+                // Calculate the point of intersection of the two lines
+                const x0 = (b2 - b1) / (m1 - m2);
+                const y0 = m1 * x0 + b1;
+
+                // Check if the point of intersection is within the bounds of the centerline
+                if (x0 >= Math.min(points[0].x, points[1].x) && x0 <= Math.max(points[0].x, points[1].x) && y0 >= Math.min(points[0].y, points[1].y) && y0 <= Math.max(points[0].y, points[1].y)) {
+                    canDrawPerpendicular = true;
+                } else if (canDrawPerpendicular) {
+                    canDrawPerpendicular = false;
+                    draw();
+                } else {
+                    canDrawPerpendicular = false;
+                }
+                currentPoint = [x, y];
+                if (canDrawPerpendicular) {
+                    draw();
+                    if (points.length % 2 === 0) {
+                        // Calculate the reflection of the point i across the centerline
+                        // Get the slope of the centerline
+                        const m1 = (points[1].y - points[0].y) / (points[1].x - points[0].x);
+
+                        // Get the slope of the perpendicular line
+                        const m2 = -1 / m1;
+
+                        // Get the y-intercept of the centerline
+                        const b1 = points[0].y - m1 * points[0].x;
+                        // Get the y-intercept of the perpendicular line
+                        const b2 = y - m2 * x;
+
+                        // Calculate the point of intersection of the two lines
+                        const x0 = (b2 - b1) / (m1 - m2);
+                        const y0 = m1 * x0 + b1;
+
+                        // Reflect the point i across the centerline
+                        const x1 = 2 * x0 - x;
+                        const y1 = 2 * y0 - y;
+
+                        // Draw an 50% opaque yellow line that goes through point i, is perpendicular to the centerline, and goes through the entire canvas
+                        // Detect whether the centerline is > 45 degrees or < 45 degrees
+                
+                        let edge1x = 0;
+                        let edge1y = 0;
+                        let edge2x = 0;
+                        let edge2y = 0;
+                        
+                        if (b2 > 1 || b2 < -1) {
+                            // Given the perpendicular line, calculate the points where it intersects the edges of the canvas
+                            edge1y = b2;
+
+                            edge2x = canvas.width;
+                            edge2y = m2 * edge2x + b2;
+                        } else {
+                            edge1x = (edge1y - b2) / m2;
+
+                            edge2y = canvas.height;
+                            edge2x = (edge2y - b2) / m2;
+                        }
+                        ctx.beginPath();
+                        ctx.moveTo(edge1x, edge1y);
+                        ctx.lineTo(edge2x, edge2y);
+                        ctx.strokeStyle = 'rgba(255, 255, 0, 0.5)';
+                        ctx.stroke();
+                    }
+                    if (points.length % 2 === 1) {
+                        // The point now needs to be the closest point on the perpendicular line of the previous point to the cursor
+                        // Get the slope of the perpendicular line
+                        const m2 = -1 / m1;
+
+                        // Get the y-intercept of the perpendicular line, using points[points.length - 1] as the point on the line
+                        const b2 = points[points.length - 1].y - m2 * points[points.length - 1].x;
+
+                        // Given the cursor position, calculate the point on the perpendicular line that is closest to the cursor
+                        const x0 = (x + m2 * y - m2 * b2) / (m2 ** 2 + 1);
+                        const y0 = m2 * x0 + b2;
+                        
+                        // Set the current point to the closest point on the perpendicular line to the cursor
+                        currentPoint = [x0, y0];
+                    }
+                    // Draw the current point
+                    ctx.beginPath();
+                    ctx.fillStyle = 'red';
+                    ctx.arc(currentPoint[0], currentPoint[1], 5, 0, 2 * Math.PI);
+                    ctx.fill();
+                    /*
+                    // Reflect the cursor point across the centerline to get the end point of the perpendicular line
+                    const x1 = 2 * x0 - x;
+                    const y1 = 2 * y0 - y;
+
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(x1, y1);
+                    ctx.stroke();
+
+                    // Draw red circles at the end points of the perpendicular line
+                    ctx.beginPath();
+                    ctx.arc(x, y, 5, 0, 2 * Math.PI);
+                    ctx.fillStyle = 'red';
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.arc(x1, y1, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+                    */
+                }
+
+
+                
+            }
+        });
+                    
+        const focalLength = document.getElementById('focalLength');
+        const altitude = document.getElementById('altitude');
+        const sensorWidth = document.getElementById('sensorWidth');
+
+        function paramsValid() {
+            return (parseFloat(focalLength.value) >= 0.0 && parseFloat(altitude.value) >= 0.0 && parseFloat(sensorWidth.value) >= 0.0);
+        }
+
+        function calculateLength() {
+            
+            
+            // Get the first two points
+            const p1 = points[0];
+            const p2 = points[1];
+
+            pointss = [p1, p2];
+            const fLen = parseFloat(focalLength.value);
+            const alt = parseFloat(altitude.value);
+            const sWidth = parseFloat(sensorWidth.value);
+
+            const pix_dim = sWidth / imageDimensions['width'];
+            const gsd = (alt * pix_dim) / fLen;
+            const len = gsd * Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
+            length = len;
+            // Factor in the scale factor. 
+            length = length / scaleFactor;
+            // Round the length to two decimal places
+            length = Math.round(length * 100) / 100;
+
+            draw();
+        }
+        function calculateArea() {
+            const data = {
+                points: points
+            };
+            if (length < 0) {
+                // Press the calculate length button first
+                calcLen.click();
+            }
+            /*
+            fetch('/calculate_area', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });*/
+
+            // Let's perform the calculations on the client side for now
+            // First, ensure that the number of points is even
+            if (points.length % 2 !== 0) {
+                console.log('Please add an even number of points to calculate the area');
+                return;
+            }
+            
+            // Divide the points into two arrays, one for each side of the centerline
+            const centerline = [points[0], points[1]];
+            const leftPoints = [];
+            const rightPoints = [];
+            // Get b and m for the centerline
+            const mc = (centerline[1].y - centerline[0].y) / (centerline[1].x - centerline[0].x);
+            const bc = centerline[0].y - mc * centerline[0].x;
+
+            // Calculate the slope of the centerline
+            const m1 = (centerline[1].y - centerline[0].y) / (centerline[1].x - centerline[0].x);
+            
+            // Divide the points into two arrays, one for each side of the centerline
+            for (let i = 2; i < points.length; i++) {
+                // Get the y-value of the point on the centerline at the x-value of the current point
+                const yc = mc * points[i].x + bc;
+                if (points[i].y < yc) {
+                    rightPoints.push(points[i]);
+                } else {
+                    leftPoints.push(points[i]);
+                }
+            }
+
+            const m2 = -1 / m1;
+
+            // For each point on the left side of the centerline, calculate the x-intercept of the perpendicular line and the centerline
+            // For each point in the right side of the centerline
+            leftPoints.sort((a, b) => {
+                const b2a = a.y - m2 * a.x;
+                const b2b = b.y - m2 * b.x;
+                const x0a = (b2a - bc) / (m1 - m2);
+                const x0b = (b2b - bc) / (m1 - m2);
+                return x0a - x0b;
+            });
+
+            // Do the same for the right side of the centerline
+            rightPoints.sort((a, b) => {
+                const b2a = a.y - m2 * a.x;
+                const b2b = b.y - m2 * b.x;
+                const x0a = (b2a - bc) / (m1 - m2);
+                const x0b = (b2b - bc) / (m1 - m2);
+                return x0a - x0b;
+            });
+
+            // Create the final sorted points array
+            const sortedPoints = [];
+            sortedPoints.push(centerline[0]);
+
+            // See whether leftPoints[0] or leftPoints[leftPoints.length-1] is closer to centerline[0]
+            const d1 = Math.sqrt((leftPoints[0].x - centerline[0].x) ** 2 + (leftPoints[0].y - centerline[0].y) ** 2);
+            const d2 = Math.sqrt((leftPoints[leftPoints.length - 1].x - centerline[0].x) ** 2 + (leftPoints[leftPoints.length - 1].y - centerline[0].y) ** 2);
+
+            if (d1 < d2) {
+                for (let i = 0; i < leftPoints.length; i++) {
+                    sortedPoints.push(leftPoints[i]);
+                }
+                sortedPoints.push(centerline[1]);
+                for (let i = rightPoints.length - 1; i >= 0; i--) {
+                    sortedPoints.push(rightPoints[i]);
+                }
+            } else {
+                for (let i = leftPoints.length - 1; i >= 0; i--) {
+                    sortedPoints.push(leftPoints[i]);
+                }
+                sortedPoints.push(centerline[1]);
+                for (let i = 0; i < rightPoints.length; i++) {
+                    sortedPoints.push(rightPoints[i]);
+                }
+            }
+
+            // Sort the points by angle
+            //const sortedPoints = points.slice().sort((a, b) => angles[points.indexOf(a)] - angles[points.indexOf(b)]);
+            
+            // Draw the polygon
+            ctx.beginPath();
+            ctx.moveTo(sortedPoints[0].x, sortedPoints[0].y);
+            for (let i = 1; i < sortedPoints.length; i++) {
+                ctx.lineTo(sortedPoints[i].x, sortedPoints[i].y);
+            }
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
+            ctx.fill();
+
+            // Get the area of the polygon
+            area = 0;
+            for (let i = 0; i < sortedPoints.length; i++) {
+                const p1 = sortedPoints[i];
+                const p2 = sortedPoints[(i + 1) % sortedPoints.length];
+                area += p1.x * p2.y - p2.x * p1.y;
+            }
+
+            area /= 2;
+
+            // Should I consider GSD in the area calculation? Answer: Yes
+            // Calculate the GSD
+            const fLen = parseFloat(focalLength.value);
+            const alt = parseFloat(altitude.value);
+            const sWidth = parseFloat(sensorWidth.value);
+
+            const pix_dim = sWidth / imageDimensions['width'];
+            const gsd = (alt * pix_dim) / fLen;
+
+            // Calculate the area in square meters. Should I square the GSD? Answer: Yes
+            area = Math.abs(area) * (gsd ** 2);
+
+            // Consider the scale factor
+            area = area / (scaleFactor ** 2);
+
+            // round the area to two decimal places
+            area = Math.round(area * 100) / 100;
+
+            polygon = sortedPoints;
+            draw();
+        }
+
+        function triggerUpdate() {
+            if (paramsValid()) {
+                
+                if (points.length >= 2) {
+                    document.getElementById('msg').classList.add('hide');
+                    calculateLength();
+                    document.getElementById('showLen').classList.remove('hide');
+                    document.getElementById('showLen').innerHTML = '<strong>LENGTH:</strong> ' + length + ' meters';
+                }
+                if (points.length >= 4) {
+                    calculateArea();
+                    document.getElementById('showArea').classList.remove('hide');
+                    document.getElementById('showArea').innerHTML = '<strong>AREA:</strong> ' + area + ' square meters';
+                }
+            } else {
+                msg.display = '';
+                document.getElementById('showLen').classList.add('hide');
+                document.getElementById('showArea').classList.add('hide');
+            }
+        }
+
+        focalLength.addEventListener('input', function() {
+            triggerUpdate();
+        });
+        altitude.addEventListener('input', function() {
+            triggerUpdate();
+        });
+        sensorWidth.addEventListener('input', function() {
+            triggerUpdate();
+        });
+    </script>
+</body>
+</html>
