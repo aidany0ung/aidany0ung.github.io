@@ -84,6 +84,7 @@
             <div id="heightResult" style="display:none;">
                 <h2>Height (m):</h2>
                 <p id="heightValue"></p>
+                <p id="heightInfo"></p>
             </div>
         </form>
     </section>
@@ -155,7 +156,7 @@
                 
                 if (diff < 4) {
                     console.log(entry);
-                    return entry.v;
+                    return entry;
                 }
             }
         }
@@ -205,8 +206,9 @@
             const date = document.getElementById('heightDate').value;
             const time = document.getElementById('heightTime').value;
             const heightValue = await getHeight(date, time);
-            document.getElementById('heightValue').textContent = heightValue;
+            document.getElementById('heightValue').textContent = heightValue.v;
             document.getElementById('heightResult').style.display = 'block';
+            document.getElementById('heightInfo').textContent = "Used the reading from " + heightValue.t.split(" ")[1];
         });
 
         // Show the first section by default
