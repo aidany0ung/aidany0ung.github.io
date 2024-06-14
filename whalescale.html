@@ -12,7 +12,7 @@
         }
         @font-face {
             font-family: 'faltura';
-            src: url('falturaanimals.ttf') format('truetype'); /* TODO */
+            src: url('/falturaanimals.ttf') format('truetype'); /* TODO */
         }
         canvas {
             border: 0px;
@@ -197,14 +197,13 @@
                 <input class="circleButton" type="button" id="reset" value="RESET">
                 <input class="circleButton" type="button" id="erase" value="ERASE">
             </div>
-            
-            <div style="display: flex; flex-direction: row; align-items: center;">
+            <!--
+            <div style="display: flex; flex-direction: row; ">
                 <input class="circleButton" type="button" id="download" value="Download">
             </div>
+        -->
         </div>
     </div>
-    <!--Load JSZip-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js"></script>
     <!--Load OpenCV.js-->
     <!--<script async src="https://docs.opencv.org/master/opencv.js"></script>-->
     <script src="https://cdn.jsdelivr.net/npm/exifr/dist/lite.umd.js"></script>
@@ -217,7 +216,6 @@
         const reset = document.getElementById('reset');
         const erase = document.getElementById('erase');
         const sidebar = document.getElementById('sidebar');
-        const download = document.getElementById('download');
         var edgeToggle = false;
         var canny = null;
         var scaleFactor = null;
@@ -302,8 +300,6 @@
             length = -1;
             draw();
 
-            
-
             const sL = document.getElementById('showLen');
             const sA = document.getElementById('showArea');
             const msg = document.getElementById('msg');
@@ -318,34 +314,8 @@
             msg.classList.remove('hide');
         })
         
-        download.addEventListener('click', function(event) {
-            // Download the image and create a CSV file with the length and area
-            const data = {
-            length: length,
-            area: area
-            };
-            const csv = 'Length,Area\n' + data.length + ',' + data.area;
-            const blob = new Blob([csv], { type: 'text/csv' });
-            var img  = canvas.toDataURL("image/png");
-            document.write('<img src="'+img+'"/>');
-            // Create a zip file containing the image and CSV
-            const zip = new JSZip();
-            zip.file('whalescale.csv', csv);
-            // Create an image from the canvas
-            const img = new Image();
-
-            zip.file('whalescale.png', base64Image, { base64: true });
-            zip.generateAsync({ type: 'blob' })
-            .then(function(content) {
-                const zipUrl = window.URL.createObjectURL(content);
-                const zipLink = document.createElement('a');
-                zipLink.setAttribute('hidden', '');
-                zipLink.setAttribute('href', zipUrl);
-                zipLink.setAttribute('download', 'whalescale.zip');
-                document.body.appendChild(zipLink);
-                zipLink.click();
-            });
-        });
+       
+        
     
         reset.addEventListener('click',function(event) {
             numPoints = 0;
@@ -734,16 +704,12 @@
                 ctx.stroke();
             }
             
-            if (points.length === 2) {
-                // Calculate the 
-            }
+
 
             // Once the centerline has been established using the first two points, figure out the distance from the cursor to the centerline and draw a line that is perpendicular to the centerline and is bisected by the centerline
             if (points.length >= 2) {
                 // Check if drawing the perpendicular line is possible
                 
-                // Given the first two points, compute deciles
-
                 // Get the slope of the centerline
                 const m1 = (points[1].y - points[0].y) / (points[1].x - points[0].x);
 
@@ -771,15 +737,6 @@
                 currentPoint = [x, y];
                 if (canDrawPerpendicular) {
                     draw();
-
-                    // Compute the deciles of the centerline
-                    var abs_val = Math.abs(points[1].x - points[0].x);
-                    // Divide into 20 equal parts
-                    var deciles = [];
-                    for (let i = 1; i < 20; i++) {
-                        deciles.push(points[0].x + (abs_val / 20) * i);
-                    }
-
                     if (points.length % 2 === 0) {
                         // Calculate the reflection of the point i across the centerline
                         // Get the slope of the centerline
